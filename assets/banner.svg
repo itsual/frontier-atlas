@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" width="1280" height="420" role="img" aria-label="Frontier Atlas">
+  <rect width="1280" height="420" fill="#0c0b09"/>
+  <g fill="none" stroke="#d4cec3" stroke-opacity="0.12" stroke-width="1">
+    <path d="M0 70 H1280"/>
+    <path d="M0 140 H1280"/>
+    <path d="M0 210 H1280"/>
+    <path d="M0 280 H1280"/>
+    <path d="M0 350 H1280"/>
+    <path d="M80 0 V420"/>
+    <path d="M240 0 V420"/>
+    <path d="M400 0 V420"/>
+    <path d="M560 0 V420"/>
+    <path d="M720 0 V420"/>
+    <path d="M880 0 V420"/>
+    <path d="M1040 0 V420"/>
+    <path d="M1200 0 V420"/>
+  </g>
+  <g transform="translate(640 86)" fill="#d4cec3">
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#d4cec3" stroke-width="1.4"/>
+    <path d="M0 -22 L5.2 0 L0 22 L-5.2 0 Z"/>
+    <path d="M-22 0 L0 -5.2 L22 0 L0 5.2 Z"/>
+    <circle cx="0" cy="0" r="3.6" fill="#0c0b09"/>
+    <circle cx="0" cy="0" r="2.1"/>
+  </g>
+  <text x="640" y="168" text-anchor="middle" fill="#9c9588" font-family="Georgia, 'Times New Roman', serif" font-size="13" letter-spacing="8">FIELD GUIDE · AUGUST 2026</text>
+  <text x="640" y="248" text-anchor="middle" fill="#f3efe6" font-family="Georgia, 'Times New Roman', serif" font-size="64" letter-spacing="-1.5">Frontier Atlas</text>
+  <text x="640" y="292" text-anchor="middle" fill="#d4cec3" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic">Pick the model. Match the effort.</text>
+  <g fill="#9c9588" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="2.4">
+    <text x="220" y="372" text-anchor="middle">OPENAI</text>
+    <text x="480" y="372" text-anchor="middle">ANTHROPIC</text>
+    <text x="800" y="372" text-anchor="middle">XAI</text>
+    <text x="1060" y="372" text-anchor="middle">GOOGLE</text>
+  </g>
+  <g>
+    <circle cx="220" cy="346" r="3.5" fill="#7d9b8a"/>
+    <circle cx="480" cy="346" r="3.5" fill="#c4896c"/>
+    <circle cx="800" cy="346" r="3.5" fill="#d8d2c4"/>
+    <circle cx="1060" cy="346" r="3.5" fill="#7a8aa0"/>
+  </g>
+</svg>
