@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Frontier Atlas — Pick the model. Match the effort." width="100%" />
+  <img src="assets/banner.svg" alt="Frontier Atlas  -  Pick the model. Match the effort." width="100%" />
 </p>
 
 <p align="center">
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <em>A field guide to frontier models — which one, how hard it should think, and when to move up.</em><br />
+  <em>A field guide to frontier models  -  which one, how hard it should think, and when to move up.</em><br />
   Current as of <strong>22 August 2026</strong>
 </p>
 
@@ -28,7 +28,7 @@
 
 Four labs. Dozens of model IDs. Effort dials that do not mean the same thing twice.
 
-**Frontier Atlas** is a routing desk, not a leaderboard. You describe the work — a client email, a thousand PDFs, a production review — and you get a **model × effort** pair, the reason it fits, and the exact condition that should make you step up. Nothing here is a benchmark claim. Every cell is a documented default, a vendor recommendation, or a compiled activity from the cheat sheets this repo was built from.
+**Frontier Atlas** is a routing desk, not a leaderboard. You describe the work  -  a client email, a thousand PDFs, a production review  -  and you get a **model × effort** pair, the reason it fits, and the exact condition that should make you step up. Nothing here is a benchmark claim. Every cell is a documented default, a vendor recommendation, or a compiled activity from the cheat sheets this repo was built from.
 
 > Use the **lowest effort that reliably meets the quality bar.** Higher is not automatically better. Length of the source document is not by itself a reason to reach for High.
 
@@ -62,10 +62,10 @@ If you only have five seconds, start here.
 | I am shipping a Claude production agent. | **Sonnet 5 at medium or high** |
 | Quality is the priority on Claude, including long coding runs. | **Opus 5 at high** (xhigh if the run is long) |
 | Opus 5 is visibly falling short. | **Fable 5 at high** |
-| Most Grok tasks — chat, research, coding, agents. | **Grok 4.6** |
+| Most Grok tasks  -  chat, research, coding, agents. | **Grok 4.6** |
 | Most Gemini work. | **Gemini 3.7 Flash** |
 
-Full activity tables — email, decks, mass-balance reviews, PDF extraction, on-device, video — live in [`guides/`](guides/).
+Full activity tables  -  email, decks, mass-balance reviews, PDF extraction, on-device, video  -  live in [`guides/`](guides/).
 
 ```mermaid
 flowchart TD
@@ -77,10 +77,10 @@ flowchart TD
   C -->|No| D{Is it high-volume and well-defined?}
   D -->|Yes| VOL[Luna Medium · Haiku 4.5 · Flash-Lite · Grok Fast]
   D -->|No| E{Which lab are you already on?}
-  E -->|OpenAI| OA[Sol Medium — raise effort, don't swap labs yet]
-  E -->|Anthropic| AN[Sonnet 5 high — Opus 5 if quality is the point]
-  E -->|xAI| XA[Grok 4.6 — 4.3 only for 1M context]
-  E -->|Google| GO[3.7 Flash — 3.1 Pro only if Flash struggles]
+  E -->|OpenAI| OA[Sol Medium  -  raise effort, don't swap labs yet]
+  E -->|Anthropic| AN[Sonnet 5 high  -  Opus 5 if quality is the point]
+  E -->|xAI| XA[Grok 4.6  -  4.3 only for 1M context]
+  E -->|Google| GO[3.7 Flash  -  3.1 Pro only if Flash struggles]
   OA --> F{Stakes / ambiguity?}
   F -->|Several sources or trade-offs| SOLH[Sol High]
   F -->|Ambiguous and costly to get wrong| SOLX[Sol Extra High]
@@ -116,7 +116,7 @@ Four short portraits. Open a guide when you need the full matrix.
 <tr>
 <td width="50%" valign="top">
 
-### OpenAI — GPT-5.6
+### OpenAI  -  GPT-5.6
 [Full guide](guides/openai.md)
 
 Sol, Terra, and Luna are **capability tiers** inside one generation. The number is the generation; the name is the tier.
@@ -126,7 +126,7 @@ Sol, Terra, and Luna are **capability tiers** inside one generation. The number 
 | **Sol** | Flagship. Quality and judgment. | $5 / $30 |
 | **Terra** | Everyday workhorse. GPT-5.5's successor for production. | $2.50 / $15 |
 | **Luna** | Fast, cheap, well-defined volume. Free/Go default. | $1 / $6 |
-| **GPT-5.5** | Legacy. Keep for validated prompts. | — |
+| **GPT-5.5** | Legacy. Keep for validated prompts. |  -  |
 
 Default for mixed professional work: **Sol Medium**.
 
@@ -135,10 +135,10 @@ Sol API/credit pricing was cut by over 20% for three months from 21 August 2026.
 </td>
 <td width="50%" valign="top">
 
-### Anthropic — Claude 5
+### Anthropic  -  Claude 5
 [Full guide](guides/anthropic.md)
 
-Effort is a first-class API parameter: `low` · `medium` · `high` · `xhigh` · `max`. It taxes *every* token — text, tools, thinking.
+Effort is a first-class API parameter: `low` · `medium` · `high` · `xhigh` · `max`. It taxes *every* token  -  text, tools, thinking.
 
 | Model | Role | List price |
 | --- | --- | --- |
@@ -156,7 +156,7 @@ Haiku 4.5 does **not** take `effort`. Use `budget_tokens` instead. Mythos 5 shar
 <tr>
 <td width="50%" valign="top">
 
-### xAI — Grok 4
+### xAI  -  Grok 4
 [Full guide](guides/xai.md)
 
 Official line: start with **Grok 4.6**. Switch only for context, cost, or a specialised surface.
@@ -177,7 +177,7 @@ Media: **Imagine Image 2.0**, **Imagine Video 1.5**, **Voice API**.
 </td>
 <td width="50%" valign="top">
 
-### Google — Gemini 3
+### Google  -  Gemini 3
 [Full guide](guides/google.md)
 
 Google routes primarily by **tier**, not a universal effort dial. The older 1.5 / 2.0 sheet in the original notes has been replaced with the 3.x lineup from Google AI and DeepMind docs.
@@ -202,7 +202,7 @@ Media: **Imagen**, **Veo**.
 
 ## Activity playbook
 
-A sample of the desk. The full list — with *move up when* clauses — is in the interactive explorer and the lab guides.
+A sample of the desk. The full list  -  with *move up when* clauses  -  is in the interactive explorer and the lab guides.
 
 | Work | Start here | Move up when |
 | --- | --- | --- |
@@ -217,8 +217,8 @@ A sample of the desk. The full list — with *move up when* clauses — is in th
 | Production-critical review | **Sol Extra High** | Security, data-loss, deploy risk → Sol Pro or Fable 5 |
 | Bulk PDF / form extraction | **Luna Medium** · **Haiku 4.5** | Exceptions only → Terra High / Sol High |
 | Long-running coding agent | **Fable 5 high** or **Opus 5 xhigh** | Give a large `max_tokens` (start at 64k) |
-| On-device / offline | **Gemini Nano** | — |
-| Image / video | **Imagine** or **Imagen / Veo** | — |
+| On-device / offline | **Gemini Nano** |  -  |
+| Image / video | **Imagine** or **Imagen / Veo** |  -  |
 
 ---
 
@@ -237,7 +237,7 @@ A sample of the desk. The full list — with *move up when* clauses — is in th
 
 This repository ships a **static desk** you can open without installing anything:
 
-**[docs/index.html](docs/index.html)** — select a lab, a model, and an effort; search an activity; compare two models side by side.
+**[docs/index.html](docs/index.html)**  -  select a lab, a model, and an effort; search an activity; compare two models side by side.
 
 To run it locally:
 
@@ -278,7 +278,7 @@ Compiled **22 August 2026** from:
 - the four source cheat sheets that seeded this repo
 - OpenAI, Anthropic, xAI, Google DeepMind, and Google AI developer docs linked in [`SOURCES.md`](SOURCES.md)
 
-Gemini was updated from the original 1.5 / 2.0 sheet to the **Gemini 3** family using Google's own model pages. Prices are **vendor API list** unless a dated promotion is noted. Availability, effort defaults, and list prices change — re-read the linked docs before you standardise a production path.
+Gemini was updated from the original 1.5 / 2.0 sheet to the **Gemini 3** family using Google's own model pages. Prices are **vendor API list** unless a dated promotion is noted. Availability, effort defaults, and list prices change  -  re-read the linked docs before you standardise a production path.
 
 Vendor names and model names are trademarks of their owners. This is an independent routing aid, not an official product of any lab.
 
