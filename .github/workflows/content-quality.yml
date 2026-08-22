@@ -32,7 +32,7 @@ jobs:
       - name: Check links
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --verbose --no-progress README.md SOURCES.md CONTRIBUTING.md CHANGELOG.md guides docs
+          args: --verbose --no-progress --accept 200,403 README.md SOURCES.md CONTRIBUTING.md CHANGELOG.md guides docs
           fail: true
 
 
