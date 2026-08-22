@@ -15,7 +15,7 @@ These files were the original compilation. Facts in the guides were checked agai
 
 - [GPT-5.6: Frontier intelligence that scales with your ambition](https://openai.com/index/gpt-5-6/)
 - [Previewing GPT-5.6 Sol](https://openai.com/index/previewing-gpt-5-6-sol/)
-- [Improving GPT-5.6 Sol in ChatGPT — and expanding access to Luna](https://openai.com/index/improving-gpt-5-6-sol-in-chatgpt/)
+- [Improving GPT-5.6 Sol in ChatGPT  -  and expanding access to Luna](https://openai.com/index/improving-gpt-5-6-sol-in-chatgpt/)
 - [Codex model guidance](https://developers.openai.com/codex/models)
 - [Reasoning guide](https://developers.openai.com/api/docs/guides/reasoning)
 - [ChatGPT model help](https://help.openai.com/en/articles/11909943-gpt-53-and-54-in-chatgpt)
