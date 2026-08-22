@@ -1,495 +1,227 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Frontier Atlas — interactive desk</title>
-  <meta name="description" content="Pick a frontier model and an effort level. See when to use it, and when to move up." />
-  <meta name="theme-color" content="#0c0b09" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A practical model and reasoning guide for high quality AI work.">
+  <meta name="theme-color" content="#121128">
+  <title>Frontier Atlas | AI model routing guide</title>
+  <meta property="og:title" content="Frontier Atlas | AI model routing guide">
+  <meta property="og:description" content="Choose an AI model and reasoning level with a practical interactive guide.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://itsual.github.io/frontier-atlas/">
+  <meta property="og:image" content="https://itsual.github.io/frontier-atlas/assets/banner.svg">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0c0b09; --surface: #161512; --raised: #1e1c18;
-      --fg: #f3efe6; --muted: #9c9588; --subtle: #6e685c;
-      --accent: #d4cec3; --accent-fg: #0c0b09;
-      --border: color-mix(in oklab, var(--fg) 12%, transparent);
-      --openai: #7d9b8a; --anthropic: #c4896c; --xai: #d8d2c4; --google: #7a8aa0;
-      --display: "Newsreader", Georgia, serif;
-      --sans: "IBM Plex Sans", system-ui, sans-serif;
-      --mono: "IBM Plex Mono", ui-monospace, monospace;
+      --ink: #f8f7ff;
+      --muted: #b8b6cf;
+      --base: #101022;
+      --panel: rgba(30, 29, 58, .72);
+      --line: rgba(255, 255, 255, .13);
+      --violet: #a78bfa;
+      --pink: #fb7185;
+      --aqua: #5eead4;
+      --gold: #fbbf24;
+      --shadow: 0 24px 80px rgba(2, 2, 18, .38);
     }
     * { box-sizing: border-box; }
-    html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.55; }
-    button, [role="button"] { cursor: pointer; font: inherit; }
-    h1, h2, h3 { font-family: var(--display); letter-spacing: -0.03em; line-height: 1.15; text-wrap: balance; margin: 0; }
-    a { color: var(--accent); }
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-    header { border-bottom: 1px solid var(--border); padding: 28px 0 20px; }
-    .mast { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: end; }
-    .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
-    h1 { font-size: clamp(2rem, 4vw, 2.6rem); }
-    .sub { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
-    nav { display: flex; gap: 6px; overflow-x: auto; }
-    nav button, .chip {
-      height: 40px; padding: 0 14px; border: 0; border-radius: 8px;
-      background: transparent; color: var(--muted);
-    }
-    nav button[aria-current="true"], .chip.on {
-      background: var(--accent); color: var(--accent-fg);
-    }
-    nav button:hover, .chip:hover { color: var(--fg); }
-    .chip {
-      height: 36px; border-radius: 999px; background: var(--surface);
-      box-shadow: 0 0 0 1px var(--border); font-size: 12px;
-      display: inline-flex; align-items: center; gap: 8px;
-    }
-    main { padding: 40px 0 80px; }
-    .grid2 { display: grid; gap: 40px; }
-    @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1.05fr; } }
-    input, select {
-      height: 48px; width: 100%; padding: 0 16px; border: 0; border-radius: 12px;
-      background: var(--surface); color: var(--fg); box-shadow: 0 0 0 1px var(--border);
-      font: inherit; font-size: 14px;
-    }
-    .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .panel {
-      background: var(--surface); border-radius: 18px; padding: 28px;
-      box-shadow: 0 0 0 1px var(--border);
-    }
-    .dot { width: 6px; height: 6px; border-radius: 99px; display: inline-block; }
-    .openai { background: var(--openai); } .anthropic { background: var(--anthropic); }
-    .xai { background: var(--xai); } .google { background: var(--google); }
-    .model-name { font-size: 2rem; margin-top: 8px; }
-    .effort { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-top: 6px; }
-    .muted { color: var(--muted); font-size: 14px; }
-    .fg { font-size: 14px; }
-    .list { list-style: none; padding: 0; margin: 16px 0 0; }
-    .list li { border-top: 1px solid var(--border); }
-    .list button, .cardbtn {
-      width: 100%; text-align: left; background: transparent; border: 0;
-      color: inherit; padding: 12px 0; display: flex; justify-content: space-between; gap: 16px;
-    }
-    .mono { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-    .cards { display: grid; gap: 8px; margin-top: 16px; }
-    @media (min-width: 700px) { .cards.two { grid-template-columns: 1fr 1fr; } }
-    .cardbtn {
-      background: var(--surface); padding: 14px 16px; border-radius: 12px;
-      box-shadow: 0 0 0 1px var(--border); flex-direction: column; align-items: start; gap: 4px;
-    }
-    .cardbtn.on { background: var(--raised); }
-    .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
-    @media (min-width: 600px) { .specs { grid-template-columns: repeat(4, 1fr); } }
-    .spec { background: var(--raised); border-radius: 8px; padding: 10px 12px; }
-    .spec dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--subtle); }
-    .spec dd { margin: 4px 0 0; font-family: var(--mono); font-size: 12px; }
-    footer { border-top: 1px solid var(--border); padding: 24px 0; color: var(--subtle); font-size: 12px; }
-    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-    .move { background: var(--raised); border-radius: 12px; padding: 14px 16px; margin-top: 16px; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: var(--base); font-family: Manrope, Arial, sans-serif; line-height: 1.55; }
+    body::before, body::after { content: ""; position: fixed; pointer-events: none; z-index: -1; border-radius: 50%; filter: blur(10px); }
+    body::before { width: 38rem; height: 38rem; left: -16rem; top: -12rem; background: radial-gradient(circle, rgba(167, 139, 250, .4), transparent 68%); }
+    body::after { width: 42rem; height: 42rem; right: -16rem; top: 14rem; background: radial-gradient(circle, rgba(45, 212, 191, .25), transparent 68%); }
+    a { color: inherit; }
+    button, select { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .brand { text-decoration: none; display: inline-flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.035em; }
+    .brand-mark { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 10px; color: #151226; background: linear-gradient(135deg, var(--aqua), var(--violet)); box-shadow: 0 0 28px rgba(94, 234, 212, .3); }
+    .nav { display: flex; align-items: center; gap: 18px; font-size: 13px; color: var(--muted); }
+    .nav a { text-decoration: none; }
+    .nav a:hover { color: var(--ink); }
+    .github-link { padding: 9px 13px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink) !important; }
+    .pricing-notice { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 12px 15px; border: 1px solid rgba(251, 191, 36, .36); border-radius: 13px; color: #f7dda1; background: rgba(91, 66, 16, .22); font-size: 12px; text-align: center; }
+    .pricing-notice strong { color: #ffe6a3; }
+    .pricing-notice a { text-underline-offset: 2px; }
+    .hero { padding: 58px 0 35px; text-align: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px; color: var(--aqua); font: 500 11px "DM Mono", monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--aqua); box-shadow: 0 0 15px var(--aqua); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 800px; margin: 0 auto 19px; font-size: clamp(2.6rem, 8vw, 5.3rem); line-height: .98; letter-spacing: -.07em; }
+    h1 em { color: var(--aqua); font-family: "Playfair Display", Georgia, serif; font-weight: 600; }
+    .lede { max-width: 650px; margin: 0 auto; color: var(--muted); font-size: clamp(1rem, 2vw, 1.16rem); }
+    .stats { margin: 42px auto 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 680px; border: 1px solid var(--line); border-radius: 18px; background: rgba(19, 18, 43, .55); overflow: hidden; }
+    .stat { padding: 16px 10px; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .stat strong { display: block; font-size: 1.25rem; letter-spacing: -.04em; }
+    .stat span { display: block; color: var(--muted); font-size: 11px; }
+    .selector { margin: 20px auto 70px; padding: clamp(20px, 4vw, 34px); max-width: 1000px; border: 1px solid var(--line); border-radius: 26px; background: linear-gradient(145deg, rgba(51, 46, 97, .75), rgba(26, 25, 57, .76)); box-shadow: var(--shadow); text-align: left; }
+    .selector-top { display: flex; justify-content: space-between; align-items: end; gap: 18px; margin-bottom: 24px; }
+    .selector h2 { margin: 0; font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -.05em; }
+    .selector-note { margin: 0; color: var(--muted); font-size: 13px; }
+    .controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; }
+    label { display: grid; gap: 7px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+    select { width: 100%; min-height: 50px; border: 1px solid var(--line); border-radius: 12px; outline: none; padding: 0 38px 0 14px; color: var(--ink); background: rgba(11, 11, 28, .63); }
+    select:focus { border-color: var(--aqua); box-shadow: 0 0 0 3px rgba(94, 234, 212, .15); }
+    .recommend { align-self: end; min-height: 50px; padding: 0 19px; border: 0; border-radius: 12px; color: #111021; background: linear-gradient(135deg, var(--aqua), #8bdfd6); font-weight: 800; }
+    .recommend:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .result { margin-top: 24px; min-height: 114px; padding: 18px; border: 1px solid rgba(94, 234, 212, .27); border-radius: 16px; background: rgba(9, 43, 49, .28); }
+    .result[hidden] { display: none; }
+    .result-kicker { margin: 0 0 3px; color: var(--aqua); font: 500 10px "DM Mono", monospace; letter-spacing: .15em; text-transform: uppercase; }
+    .result h3 { margin-bottom: 4px; font-size: 1.42rem; letter-spacing: -.04em; }
+    .result p { margin: 0; color: var(--muted); font-size: 14px; }
+    section { padding: 34px 0 70px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 22px; }
+    .section-head h2 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.6rem); letter-spacing: -.06em; }
+    .section-head p { max-width: 440px; margin: 0; color: var(--muted); font-size: 14px; }
+    .model-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+    .model-card { min-height: 224px; padding: 21px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 19px; color: var(--ink); background: var(--panel); box-shadow: 0 12px 35px rgba(5, 5, 21, .18); text-align: left; transition: transform .2s ease, border-color .2s ease; }
+    .model-card::after { content: ""; position: absolute; right: -25px; bottom: -40px; width: 112px; height: 112px; border-radius: 50%; opacity: .35; background: var(--card-color); filter: blur(8px); }
+    .model-card:hover, .model-card[aria-pressed="true"] { transform: translateY(-4px); border-color: var(--card-color); }
+    .model-card[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--card-color), 0 16px 42px rgba(3, 3, 22, .33); }
+    .model-card small { color: var(--card-color); font: 500 10px "DM Mono", monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .model-card h3 { margin: 30px 0 8px; font-size: 1.4rem; letter-spacing: -.04em; }
+    .model-card p { margin: 0; position: relative; z-index: 1; color: var(--muted); font-size: 13px; }
+    .model-card .arrow { position: absolute; right: 20px; top: 18px; color: var(--card-color); font-size: 1.35rem; }
+    .openai { --card-color: #8bdeb0; }
+    .anthropic { --card-color: #f1ae7b; }
+    .xai { --card-color: #c7ccff; }
+    .google { --card-color: #f6ca5d; }
+    .detail { margin-top: 18px; display: grid; grid-template-columns: 1.12fr .88fr; overflow: hidden; border: 1px solid var(--line); border-radius: 21px; background: rgba(21, 20, 47, .72); }
+    .detail-main, .detail-side { padding: clamp(22px, 4vw, 36px); }
+    .detail-side { border-left: 1px solid var(--line); background: rgba(8, 8, 24, .3); }
+    .detail-label { margin-bottom: 10px; color: var(--violet); font: 500 10px "DM Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .detail h3 { margin-bottom: 11px; font-size: clamp(1.7rem, 4vw, 2.4rem); letter-spacing: -.06em; }
+    .detail p { margin-bottom: 0; color: var(--muted); }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; color: var(--muted); background: rgba(255, 255, 255, .04); font: 500 11px "DM Mono", monospace; }
+    .detail-side h4 { margin: 0 0 12px; font-size: 13px; }
+    .detail-side ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 13px; }
+    .detail-side li { padding-left: 17px; position: relative; }
+    .detail-side li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .principle { padding: 23px; min-height: 175px; border: 1px solid var(--line); border-radius: 18px; background: rgba(29, 28, 56, .52); }
+    .principle-num { color: var(--pink); font: 500 11px "DM Mono", monospace; }
+    .principle h3 { margin: 24px 0 7px; font-size: 1.08rem; letter-spacing: -.035em; }
+    .principle p { margin: 0; color: var(--muted); font-size: 13px; }
+    footer { padding: 32px 0 43px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 15px; }
+    @media (max-width: 820px) { .model-grid { grid-template-columns: repeat(2, 1fr); } .principles { grid-template-columns: 1fr; } }
+    @media (max-width: 650px) { .wrap, .pricing-notice { width: min(100% - 28px, 1160px); } .topbar { padding: 14px 0; } .nav { gap: 12px; } .nav a:not(.github-link) { display: none; } .hero { padding-top: 42px; } .stats { margin-top: 31px; } .selector { margin-bottom: 46px; } .selector-top, .section-head { display: block; } .selector-note, .section-head p { margin-top: 8px; } .controls, .detail { grid-template-columns: 1fr; } .recommend { margin-top: 4px; } .detail-side { border-left: 0; border-top: 1px solid var(--line); } }
+    @media (max-width: 420px) { .model-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap mast">
-      <div>
-        <p class="kicker">Field guide · 22 August 2026</p>
-        <h1>Frontier Atlas</h1>
-        <p class="sub">Pick the model. Match the effort. Four labs, one desk.</p>
-      </div>
-      <nav id="nav" aria-label="Sections"></nav>
-    </div>
+  <header class="wrap topbar">
+    <a class="brand" href="#top" aria-label="Frontier Atlas home"><span class="brand-mark">F</span> Frontier Atlas</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#atlas">Atlas</a>
+      <a href="#principles">Principles</a>
+      <a class="github-link" href="https://github.com/itsual/frontier-atlas">View source</a>
+    </nav>
   </header>
-  <main class="wrap" id="app"></main>
-  <footer>
-    <div class="wrap">Routing notes, not benchmarks. <a href="https://github.com/itsual/frontier-atlas">github.com/itsual/frontier-atlas</a></div>
-  </footer>
-<script>
-const LABS = {
-  openai: { name: "OpenAI", short: "GPT", color: "openai", noun: "Reasoning effort" },
-  anthropic: { name: "Anthropic", short: "Claude", color: "anthropic", noun: "Effort" },
-  xai: { name: "xAI", short: "Grok", color: "xai", noun: "Reasoning / mode" },
-  google: { name: "Google", short: "Gemini", color: "google", noun: "Tier / thinking" },
-};
-const EFFORTS = {
-  openai: {
-    instant: { label: "Instant / Light–Low", use: "Simple, low-risk, well-scoped, needs a quick response.", dont: "The document is long. Length is not difficulty." },
-    medium: { label: "Medium", use: "Normal planning and judgment, clear objective.", dont: "Assuming High is always better." },
-    high: { label: "High", use: "Several steps, sources, constraints or trade-offs.", dont: "You only wanted a longer answer." },
-    xhigh: { label: "Extra High", use: "Failure is costly, the problem is ambiguous.", dont: "The prompt is unclear." },
-    pro: { label: "Pro", use: "A marginal quality gain materially affects the outcome.", dont: "The task is routine." },
-  },
-  anthropic: {
-    low: { label: "low", use: "Most efficient. Token savings with some capability reduction.", dont: "Open-ended judgment or long tool loops." },
-    medium: { label: "medium", use: "Balanced, moderate savings.", dont: "You need default intelligence and have not eval'd." },
-    high: { label: "high", use: "Default. Equivalent to not setting the parameter.", dont: "Using it as a length control." },
-    xhigh: { label: "xhigh", use: "Long-horizon agentic / coding work.", dont: "Forgetting a large max_tokens budget." },
-    max: { label: "max", use: "No constraints on token spending.", dont: "Most workloads: extra cost, small gain." },
-    lite: { label: "n/a (no effort dial)", use: "Haiku does not take effort. Use thinking budget_tokens.", dont: "Expecting the effort parameter to apply." },
-  },
-  xai: {
-    low: { label: "Low / Auto", use: "Balanced default for chat and well-scoped work.", dont: "Multi-step adversarial problems." },
-    medium: { label: "Medium", use: "Normal professional work that still needs a plan.", dont: "Already knowing it is the hardest class." },
-    high: { label: "High / Think / Expert", use: "Difficult coding, architecture, research.", dont: "High-volume classification." },
-    xhigh: { label: "xhigh / Heavy", use: "Multi-agent, highest quality, slower.", dont: "When 4.6 at medium already meets the bar." },
-  },
-  google: {
-    lite: { label: "Lite / on-device", use: "Lowest cost and latency, or data that must stay on device.", dont: "Multi-step agents or architecture." },
-    flash: { label: "Flash (default)", use: "Everyday workhorse.", dont: "Flash already struggling — then move to Pro." },
-    pro: { label: "Pro", use: "Highly complex, nuanced problems.", dont: "Well-defined work Flash already solves." },
-    thinking: { label: "Deliberate thinking", use: "Accuracy matters more than speed.", dont: "You only wanted a longer essay." },
-  },
-};
-const MODELS = [
-  { id: "gpt-56-sol", lab: "openai", name: "GPT-5.6 Sol", api: "gpt-5.6-sol", status: "current",
-    pos: "Flagship. Use when quality and judgment matter most.",
-    price: "$5 / $30", ctx: "—", def: "medium",
-    efforts: ["instant","medium","high","xhigh","pro"],
-    matrix: {
-      instant: "Quick but polished professional responses: email, brief explanations, notes.",
-      medium: "Recommended general default. Proposals, reports, everyday research, normal coding.",
-      high: "Several documents, sources, constraints or trade-offs. Strategy, architecture, difficult coding.",
-      xhigh: "Ambiguous or high-impact work. Deep research, engineering trade-offs, RCA, final design.",
-      pro: "Highest-value, quality-first work. Board/client submissions, production-critical reviews. Pro is a mode, not just another tick.",
-    }},
-  { id: "gpt-56-terra", lab: "openai", name: "GPT-5.6 Terra", api: "gpt-5.6-terra", status: "current",
-    pos: "Everyday workhorse. Natural starting point for work previously given to GPT-5.5.",
-    price: "$2.50 / $15", def: "medium",
-    efforts: ["instant","medium","high","xhigh","pro"],
-    matrix: {
-      instant: "Rewriting, formatting, simple extraction, standard summaries.",
-      medium: "Best everyday workhorse. Spreadsheets, tool workflows, report drafts, coding.",
-      high: "Complex but cost-sensitive: multi-step analysis, agents, debugging.",
-      xhigh: "Difficult repeated workflows already proven on Terra. Compare against Sol Medium/High first.",
-      pro: "Not normally shown as Terra Pro. Prefer Sol Pro for quality-first work.",
-    }},
-  { id: "gpt-56-luna", lab: "openai", name: "GPT-5.6 Luna", api: "gpt-5.6-luna", status: "current",
-    pos: "Fastest and cheapest 5.6 tier. Free/Go default as of August 2026.",
-    price: "$1 / $6", def: "instant",
-    efforts: ["instant","medium","high","xhigh","pro"],
-    matrix: {
-      instant: "Best high-volume option: classify, extract, clean, route, short summaries.",
-      medium: "Repeatable tasks with limited judgment: triage, QA, batch transforms.",
-      high: "Messier high-volume: exceptions, multi-field extraction, limited multi-step.",
-      xhigh: "Usually inefficient. Move to Terra or Sol instead of pushing Luna harder.",
-      pro: "Usually less sensible than changing model.",
-    }},
-  { id: "gpt-55", lab: "openai", name: "GPT-5.5", api: "gpt-5.5", status: "legacy",
-    pos: "Previous-generation frontier. Retain for compatibility.",
-    def: "medium", efforts: ["instant","medium","high","xhigh","pro"],
-    matrix: {
-      instant: "Fast legacy workflows that must preserve 5.5 behaviour.",
-      medium: "Recommended baseline for existing 5.5 prompts and coding workflows.",
-      high: "Difficult existing agents and 5.5-to-5.6 migration comparisons.",
-      xhigh: "Hardest unmigrated workflows and regression evals.",
-      pro: "When consistency with previous 5.5 outputs matters.",
-    }},
-  { id: "claude-fable-5", lab: "anthropic", name: "Claude Fable 5", api: "claude-fable-5", status: "current",
-    pos: "Ceiling. Long-running agents, hardest problems. Use when Opus 5 is visibly falling short.",
-    price: "$10 / $50", ctx: "1M / 128k", def: "high",
-    efforts: ["low","medium","high","xhigh","max"],
-    matrix: {
-      low: "Routine / interactive. Lower effort on Fable still often exceeds prior-gen xhigh.",
-      medium: "Standard agentic and analysis work at lower cost.",
-      high: "Start here. Complex multi-step agents, architecture, hard research.",
-      xhigh: "Very long autonomous runs, multi-hour coding.",
-      max: "Frontier-level only. Output is $50/MTok.",
-    }},
-  { id: "claude-opus-5", lab: "anthropic", name: "Claude Opus 5", api: "claude-opus-5", status: "current",
-    pos: "Quality-first default. Close to Fable at half the price.",
-    price: "$5 / $25", ctx: "1M / 128k", def: "high",
-    efforts: ["low","medium","high","xhigh","max"],
-    matrix: {
-      low: "Drafting, summaries, scoped edits wherever evals hold.",
-      medium: "Everyday enterprise agents, documents, moderate coding.",
-      high: "Start here. Default; adjust on evals.",
-      xhigh: "Large refactors, multi-repo, long tool loops. Thinking cannot be disabled.",
-      max: "When unconstrained spending is justified.",
-    }},
-  { id: "claude-sonnet-5", lab: "anthropic", name: "Claude Sonnet 5", api: "claude-sonnet-5", status: "current",
-    pos: "Production agents at volume. Best speed × intelligence.",
-    price: "$2 / $10", ctx: "1M / 128k", def: "high",
-    efforts: ["low","medium","high","xhigh","max"],
-    matrix: {
-      low: "High-volume or latency-sensitive chat and non-coding.",
-      medium: "Cost-saving step-down. Comparable to Sonnet 4.6 at high.",
-      high: "Start here. Complex reasoning, coding, agents.",
-      xhigh: "Hardest coding — cheaper Opus-class effort.",
-      max: "Rarely needed; consider Opus 5 at high.",
-    }},
-  { id: "claude-haiku-45", lab: "anthropic", name: "Claude Haiku 4.5", api: "claude-haiku-4-5", status: "current",
-    pos: "Classify, route, extract at scale. No effort parameter.",
-    price: "$1 / $5", ctx: "200k / 64k", def: "lite",
-    efforts: ["lite"],
-    matrix: { lite: "Effort is not supported. Control depth with extended thinking budget_tokens." }},
-  { id: "grok-46", lab: "xai", name: "Grok 4.6", api: "grok-4.6", status: "current",
-    pos: "Default for almost everything. Official recommendation for code and general use.",
-    price: "$2 / $6", ctx: "500k", def: "medium",
-    efforts: ["low","medium","high","xhigh"],
-    matrix: {
-      low: "Everyday chat. Consumer Auto.",
-      medium: "Recommended default for coding, agents, professional work.",
-      high: "Difficult coding, architecture, research. Consumer Think/Expert.",
-      xhigh: "Hardest problems. Consumer Heavy.",
-    }},
-  { id: "grok-43", lab: "xai", name: "Grok 4.3", api: "grok-4.3", status: "current",
-    pos: "Larger context, lower cost. Use when you exceed 500k.",
-    price: "$1.25 / $2.50", ctx: "1M", def: "medium",
-    efforts: ["low","medium","high","xhigh"],
-    matrix: {
-      low: "Cheap long-context summarisation.",
-      medium: "Document generation and large-repo questions.",
-      high: "Long-horizon reasoning across a 1M window.",
-      xhigh: "Only if 4.6 at high cannot fit the context.",
-    }},
-  { id: "grok-build-01", lab: "xai", name: "Grok Build 0.1", api: "grok-build-0.1", status: "specialized",
-    pos: "Coding specialist at $1/$2. CLI default is now 4.6; keep 0.1 for the cheap coding path.",
-    price: "$1 / $2", ctx: "256k", def: "medium",
-    efforts: ["medium","high"],
-    matrix: {
-      medium: "Interactive coding in an agent harness (~100+ tok/s).",
-      high: "Harder refactors still inside the coding specialist.",
-    }},
-  { id: "gemini-37-flash", lab: "google", name: "Gemini 3.7 Flash", api: "gemini-3.7-flash", status: "current",
-    pos: "Start here on Google. Intelligent workhorse for coding and agents.",
-    price: "$0.75 / $3.75 intro", ctx: "1M / 64k", def: "flash",
-    efforts: ["flash","thinking"],
-    matrix: {
-      flash: "Default for coding, agents, conversation, multimodal work.",
-      thinking: "Turn up deliberate reasoning for STEM, planning, synthesis.",
-    }},
-  { id: "gemini-35-flash-lite", lab: "google", name: "Gemini 3.5 Flash-Lite", api: "gemini-3.5-flash-lite", status: "current",
-    pos: "High-throughput, cheapest Gemini. Downgrade only if the task is simple.",
-    def: "lite", efforts: ["lite"],
-    matrix: { lite: "Massive-scale repetitive tasks that do not need deep reasoning." }},
-  { id: "gemini-31-pro", lab: "google", name: "Gemini 3.1 Pro", api: "gemini-3.1-pro-preview", status: "preview",
-    pos: "Upgrade from Flash only when Flash struggles. Preview.",
-    def: "pro", efforts: ["pro","thinking"],
-    matrix: {
-      pro: "Heavy lifting and complex logic.",
-      thinking: "Deliberate self-checking on STEM, strategy, research.",
-    }},
-  { id: "gemini-nano", lab: "google", name: "Gemini Nano", status: "specialized",
-    pos: "On-device / offline. Privacy and zero-latency.",
-    def: "lite", efforts: ["lite"],
-    matrix: { lite: "Edge micro-tasks. Data never leaves the device." }},
-];
-const ACTIVITIES = [
-  { q: "email rewrite linkedin message", label: "Professional email or message rewrite", model: "gpt-56-sol", effort: "instant", up: "Sensitive or multi-stakeholder → Sol Medium" },
-  { q: "meeting minutes notes transcript", label: "Meeting minutes and action tables", model: "gpt-56-luna", effort: "medium", up: "Ambiguous decisions must be inferred → Sol High" },
-  { q: "market competitor research", label: "Broad market or competitor research", model: "gpt-56-sol", effort: "high", up: "Conflicting sources or investment-grade → Extra High" },
-  { q: "literature review synthesis", label: "Balanced literature review", model: "gpt-56-sol", effort: "xhigh", up: "Publication-grade or exec recs → Pro" },
-  { q: "spreadsheet clean extract csv excel", label: "Spreadsheet cleaning and classification", model: "gpt-56-luna", effort: "medium", up: "Formulas and business rules → Terra Medium" },
-  { q: "spreadsheet analysis metrics kpi", label: "Spreadsheet analysis and diagnosis", model: "gpt-56-terra", effort: "medium", up: "Causal / forecast / strategy → Sol High" },
-  { q: "powerpoint slides deck presentation", label: "PowerPoint from a brand template", model: "gpt-56-sol", effort: "high", up: "Hierarchy + story + fidelity all critical → Extra High" },
-  { q: "routine coding script transform", label: "Routine coding and scripts", model: "gpt-56-terra", effort: "medium", up: "Architecture or unfamiliar repo → Sol High" },
-  { q: "production code review architecture security", label: "Production-critical code or architecture review", model: "gpt-56-sol", effort: "xhigh", up: "Security / data-loss / deploy risk → Sol Pro or Fable 5" },
-  { q: "pdf extract batch volume forms", label: "High-volume PDF / form extraction", model: "gpt-56-luna", effort: "medium", up: "Exceptions → Terra High or Sol High" },
-  { q: "classify route extract triage haiku", label: "Classify, route, or extract at scale", model: "claude-haiku-45", effort: "lite", up: "OpenAI volume path → Luna Medium" },
-  { q: "claude production agent", label: "Production agent at volume", model: "claude-sonnet-5", effort: "high", up: "Quality is the priority → Opus 5 high" },
-  { q: "long-running autonomous coding hours", label: "Long-running autonomous coding agent", model: "claude-fable-5", effort: "high", up: "Multi-hour runs → Fable xhigh, large max_tokens" },
-  { q: "grok default coding", label: "Default coding and knowledge work on Grok", model: "grok-46", effort: "medium", up: "Difficult / long-running → high or Heavy" },
-  { q: "long context huge document 1m", label: "Huge documents or large repos", model: "grok-43", effort: "medium", up: "Gemini 1M multimodal or Claude 1M instead" },
-  { q: "on-device offline privacy nano", label: "On-device, offline, or strict privacy", model: "gemini-nano", effort: "lite" },
-];
-const SNAP = [
-  { s: "I just need a good answer quickly.", c: "Sol Instant", id: "gpt-56-sol", e: "instant" },
-  { s: "This is normal professional work.", c: "Sol Medium", id: "gpt-56-sol", e: "medium" },
-  { s: "I have many routine tasks to process.", c: "Luna Medium", id: "gpt-56-luna", e: "medium" },
-  { s: "Capable workhorse for repeated analysis or coding.", c: "Terra Medium", id: "gpt-56-terra", e: "medium" },
-  { s: "Several documents, sources, or trade-offs.", c: "Sol High", id: "gpt-56-sol", e: "high" },
-  { s: "Ambiguous, difficult, and important.", c: "Sol Extra High", id: "gpt-56-sol", e: "xhigh" },
-  { s: "Final high-stakes deliverable.", c: "Sol Pro", id: "gpt-56-sol", e: "pro" },
-  { s: "Shipping a Claude production agent.", c: "Sonnet 5 high", id: "claude-sonnet-5", e: "high" },
-  { s: "Most Grok tasks.", c: "Grok 4.6", id: "grok-46", e: "medium" },
-  { s: "Most Gemini work.", c: "3.7 Flash", id: "gemini-37-flash", e: "flash" },
-];
-
-const state = { view: "advise", q: "", rec: null, lab: "all", model: "gpt-56-sol", effort: "medium", left: "gpt-56-sol", right: "claude-sonnet-5" };
-const $ = (id) => document.getElementById(id);
-const model = (id) => MODELS.find((m) => m.id === id);
-const elabel = (lab, e) => (EFFORTS[lab] && EFFORTS[lab][e] && EFFORTS[lab][e].label) || e;
-
-function recommend(raw) {
-  const q = raw.toLowerCase();
-  let bestA = null, bestS = 0;
-  for (const a of ACTIVITIES) {
-    let s = 0;
-    for (const w of a.q.split(" ")) if (q.includes(w) || a.label.toLowerCase().includes(q)) s += q.includes(w) ? 2 : 0;
-    if (a.label.toLowerCase().includes(q)) s += 6;
-    if (s > bestS) { bestS = s; bestA = a; }
-  }
-  let bestSnap = null, ss = 0;
-  for (const r of SNAP) {
-    const s = (q && r.s.toLowerCase().includes(q)) || r.c.toLowerCase().includes(q) ? 4 : 0;
-    for (const w of q.split(/\s+/)) if (w.length > 3 && r.s.toLowerCase().includes(w)) s && (ss = Math.max(ss, 3));
-    let t = 0;
-    for (const w of q.split(/\s+/)) if (w.length > 3 && (r.s.toLowerCase().includes(w) || r.c.toLowerCase().includes(w))) t += 2;
-    if (t > ss) { ss = t; bestSnap = r; }
-  }
-  if (bestA && bestS >= ss && bestS > 0) return { model: model(bestA.model), effort: bestA.effort, why: bestA.label, up: bestA.up };
-  if (bestSnap && ss > 0) return { model: model(bestSnap.id), effort: bestSnap.e, why: bestSnap.s, up: null };
-  const named = MODELS.find((m) => m.name.toLowerCase().includes(q) || (m.api && m.api.includes(q)));
-  if (named) return { model: named, effort: named.def, why: named.pos, up: null };
-  return { model: model("gpt-56-sol"), effort: "medium", why: "No close match. Documented general default: GPT-5.6 Sol at Medium.", up: null };
-}
-
-function nav() {
-  const views = [["advise","Advise"],["desk","Desk"],["playbook","Playbook"],["compare","Compare"]];
-  $("nav").innerHTML = views.map(([id,l]) =>
-    `<button type="button" data-view="${id}" aria-current="${state.view===id}">${l}</button>`
-  ).join("");
-  $("nav").onclick = (e) => {
-    const b = e.target.closest("button");
-    if (!b) return;
-    state.view = b.dataset.view;
-    render();
-  };
-}
-
-function resultHTML(rec) {
-  if (!rec) {
-    return `<aside class="panel"><p class="kicker">Waiting</p><h2>The documented defaults</h2>
-      <ul class="list">${[
-        ["Mixed professional work","GPT-5.6 Sol · Medium"],
-        ["Repeated analysis or coding","Terra Medium"],
-        ["Bulk extract / classify","Luna · Haiku 4.5 · Flash-Lite"],
-        ["Claude production agents","Sonnet 5 · medium or high"],
-        ["Almost everything on Grok","Grok 4.6"],
-        ["Almost everything on Gemini","3.7 Flash"],
-      ].map(([k,v]) => `<li><div class="muted" style="padding:12px 0"><div>${k}</div><div class="model-name" style="font-size:1.25rem">${v}</div></div></li>`).join("")}</ul></aside>`;
-  }
-  const m = rec.model;
-  const cell = m.matrix[rec.effort];
-  return `<aside class="panel">
-    <p class="kicker">Recommendation · <span class="dot ${m.lab}"></span> ${LABS[m.lab].name}</p>
-    <h2 class="model-name">${m.name}</h2>
-    <p class="effort">${elabel(m.lab, rec.effort)}</p>
-    <p class="muted">${m.pos}</p>
-    ${cell ? `<p class="fg" style="margin-top:14px">${cell}</p>` : ""}
-    <p class="muted">${rec.why}</p>
-    ${rec.up ? `<div class="move"><p class="kicker">Move up when</p><p class="fg">${rec.up}</p></div>` : ""}
-    <button class="chip on" style="margin-top:18px" data-open="${m.id}" data-e="${rec.effort}">Open on the desk</button>
-  </aside>`;
-}
-
-function advise() {
-  return `<div class="grid2">
-    <div>
-      <p class="kicker">Five-second desk</p>
-      <h2>What are you trying to do?</h2>
-      <p class="muted">Describe the work. Atlas maps it onto a model × effort pair.</p>
-      <form id="f" style="margin-top:20px" class="row">
-        <label class="sr" for="q">Task</label>
-        <input id="q" value="${state.q.replace(/"/g,""")}" placeholder="e.g. architecture review for a payments service" style="flex:1; min-width:220px" />
-        <button class="chip on" type="submit">Map it</button>
-      </form>
-      <p class="kicker" style="margin-top:36px">Or start from a situation</p>
-      <ul class="list" id="snaps">${SNAP.map((r,i)=>`<li><button type="button" data-snap="${i}"><span>${r.s}</span><span class="mono">${r.c}</span></button></li>`).join("")}</ul>
-    </div>
-    ${resultHTML(state.rec)}
-  </div>`;
-}
-
-function desk() {
-  const list = MODELS.filter((m) => state.lab === "all" || m.lab === state.lab);
-  const m = model(state.model);
-  const meta = EFFORTS[m.lab][state.effort];
-  const cell = m.matrix[state.effort];
-  return `<div class="grid2">
-    <div>
-      <div class="row" id="labs">
-        <button class="chip ${state.lab==="all"?"on":""}" data-lab="all">All labs</button>
-        ${Object.entries(LABS).map(([id,l]) => `<button class="chip ${state.lab===id?"on":""}" data-lab="${id}"><span class="dot ${id}"></span>${l.short}</button>`).join("")}
+  <aside class="pricing-notice" id="pricing-notice" aria-label="Pricing disclaimer">
+    <strong>Pricing disclaimer:</strong> Pricing and availability can change. For the latest details, refer to the official vendor website or documentation before making a decision.
+  </aside>
+  <main id="top">
+    <section class="hero wrap">
+      <p class="eyebrow"><span class="pulse"></span> interactive routing desk</p>
+      <h1>Find the right model for the <em>work in front of you.</em></h1>
+      <p class="lede">Choose with clarity. Start at the lowest effort that reliably meets your quality bar, then increase only when the work calls for it.</p>
+      <div class="stats" aria-label="Atlas coverage">
+        <div class="stat"><strong>4</strong><span>model families</span></div>
+        <div class="stat"><strong>15+</strong><span>recommended routes</span></div>
+        <div class="stat"><strong>1</strong><span>simple starting point</span></div>
       </div>
-      <div class="cards" id="models">${list.map((x) => `<button class="cardbtn ${x.id===m.id?"on":""}" data-model="${x.id}">
-        <strong>${x.name}</strong><span class="muted" style="font-size:12px">${x.pos}</span>
-      </button>`).join("")}</div>
-    </div>
-    <article class="panel">
-      <p class="kicker"><span class="dot ${m.lab}"></span> ${LABS[m.lab].name} · ${LABS[m.lab].noun}</p>
-      <h2 class="model-name">${m.name}</h2>
-      ${m.api ? `<p class="mono">${m.api}</p>` : ""}
-      <p class="fg" style="margin-top:12px">${m.pos}</p>
-      <dl class="specs">
-        ${m.ctx ? `<div class="spec"><dt>Context</dt><dd>${m.ctx}</dd></div>` : ""}
-        ${m.price ? `<div class="spec"><dt>API</dt><dd>${m.price}</dd></div>` : ""}
-        <div class="spec"><dt>Status</dt><dd>${m.status}</dd></div>
-        <div class="spec"><dt>Default</dt><dd>${elabel(m.lab, m.def)}</dd></div>
-      </dl>
-      <div class="row" id="efforts">${m.efforts.map((e) => `<button class="chip ${e===state.effort?"on":""}" data-effort="${e}">${elabel(m.lab,e)}</button>`).join("")}</div>
-      ${cell ? `<p class="fg" style="margin-top:22px; padding-top:18px; border-top:1px solid var(--border)">${cell}</p>` : ""}
-      ${meta ? `<dl class="specs" style="grid-template-columns:1fr 1fr; margin-top:18px">
-        <div class="spec"><dt>Use when</dt><dd style="font-family:var(--sans); font-size:13px; color:var(--muted)">${meta.use}</dd></div>
-        <div class="spec"><dt>Not merely because</dt><dd style="font-family:var(--sans); font-size:13px; color:var(--muted)">${meta.dont}</dd></div>
-      </dl>` : ""}
-    </article>
-  </div>`;
-}
-
-function playbook() {
-  return `<p class="kicker">Activity playbook</p><h2>Start from the work, not the brand.</h2>
-    <ul class="list">${ACTIVITIES.map((a,i) => {
-      const m = model(a.model);
-      return `<li><button type="button" data-act="${i}"><span><span class="mono">${a.label}</span></span><span class="mono">${m.name} · ${elabel(m.lab,a.effort)}</span></button></li>`;
-    }).join("")}</ul>`;
-}
-
-function compare() {
-  const opts = MODELS.map((m) => `<option value="${m.id}">${m.name}</option>`).join("");
-  const card = (id) => {
-    const m = model(id);
-    return `<article class="panel"><p class="kicker"><span class="dot ${m.lab}"></span> ${LABS[m.lab].name}</p>
-      <h3 class="model-name" style="font-size:1.6rem">${m.name}</h3>
-      <p class="muted">${m.pos}</p>
-      <dl class="specs">${m.price?`<div class="spec"><dt>API</dt><dd>${m.price}</dd></div>`:""}${m.ctx?`<div class="spec"><dt>Context</dt><dd>${m.ctx}</dd></div>`:""}</dl>
-      <ul class="list">${m.efforts.map((e)=>`<li style="padding:10px 0"><p class="effort">${elabel(m.lab,e)}</p><p class="fg">${m.matrix[e]}</p></li>`).join("")}</ul>
-    </article>`;
-  };
-  return `<p class="kicker">Side by side</p><h2>Compare two models</h2>
-    <div class="grid2" style="margin-top:20px; grid-template-columns:1fr 1fr">
-      <label><span class="mono">Left</span><select id="left">${opts}</select></label>
-      <label><span class="mono">Right</span><select id="right">${opts}</select></label>
-    </div>
-    <div class="grid2" style="margin-top:20px">${card(state.left)}${card(state.right)}</div>`;
-}
-
-function bind() {
-  if (state.view === "advise") {
-    $("f").onsubmit = (e) => { e.preventDefault(); state.q = $("q").value; state.rec = recommend(state.q); const r = state.rec; if (r) { state.model = r.model.id; state.effort = r.effort; } render(); };
-    document.querySelectorAll("[data-snap]").forEach((b) => b.onclick = () => {
-      const r = SNAP[+b.dataset.snap]; state.q = r.s; state.rec = { model: model(r.id), effort: r.e, why: r.s, up: null };
-      state.model = r.id; state.effort = r.e; render();
+    </section>
+    <section class="selector wrap" aria-labelledby="selector-title">
+      <div class="selector-top">
+        <div><p class="eyebrow">start here</p><h2 id="selector-title">Get a tailored recommendation</h2></div>
+        <p class="selector-note">A guide for planning, research, coding, and high volume work.</p>
+      </div>
+      <div class="controls">
+        <label>What are you doing?
+          <select id="task">
+            <option value="email">Writing an email or short update</option>
+            <option value="work">Everyday professional work</option>
+            <option value="research">Research or complex analysis</option>
+            <option value="code">Coding or architecture</option>
+            <option value="bulk">High volume extraction or classification</option>
+            <option value="critical">Production critical final review</option>
+          </select>
+        </label>
+        <label>What matters most?
+          <select id="priority">
+            <option value="balanced">Balanced quality and speed</option>
+            <option value="speed">Speed and cost</option>
+            <option value="quality">Highest practical quality</option>
+          </select>
+        </label>
+        <button class="recommend" id="recommend" type="button">Show my route</button>
+      </div>
+      <div id="result" class="result" hidden aria-live="polite"></div>
+    </section>
+    <section class="wrap" id="atlas" aria-labelledby="atlas-title">
+      <div class="section-head"><h2 id="atlas-title">Explore the model families</h2><p>Select a card to see its best starting point and the situations where it shines.</p></div>
+      <div class="model-grid" role="group" aria-label="Model families">
+        <button class="model-card openai" type="button" data-lab="openai" aria-pressed="true"><small>OpenAI</small><span class="arrow">↗</span><h3>GPT</h3><p>Flexible reasoning controls for fast, everyday, and quality first work.</p></button>
+        <button class="model-card anthropic" type="button" data-lab="anthropic" aria-pressed="false"><small>Anthropic</small><span class="arrow">↗</span><h3>Claude</h3><p>Strong agents and sustained reasoning for demanding work.</p></button>
+        <button class="model-card xai" type="button" data-lab="xai" aria-pressed="false"><small>xAI</small><span class="arrow">↗</span><h3>Grok</h3><p>A capable general option with large context choices.</p></button>
+        <button class="model-card google" type="button" data-lab="google" aria-pressed="false"><small>Google</small><span class="arrow">↗</span><h3>Gemini</h3><p>Fast multimodal work, agent support, and on device options.</p></button>
+      </div>
+      <article class="detail" id="detail" aria-live="polite"></article>
+    </section>
+    <section class="wrap" id="principles" aria-labelledby="principles-title">
+      <div class="section-head"><h2 id="principles-title">Simple rules that improve results</h2><p>Good routing is about matching the work, not treating a model name as a permanent default.</p></div>
+      <div class="principles">
+        <article class="principle"><span class="principle-num">01</span><h3>Start light</h3><p>Use the lowest reliable effort. It keeps interactions responsive and gives you room to step up when real complexity appears.</p></article>
+        <article class="principle"><span class="principle-num">02</span><h3>Effort is not length</h3><p>Reasoning depth and response size are separate choices. Ask for the format and length you need.</p></article>
+        <article class="principle"><span class="principle-num">03</span><h3>Switch with evidence</h3><p>Move to a stronger model when representative checks show a meaningful gain for your own workflow.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap"><span>Frontier Atlas is an independent routing guide.</span><a href="https://github.com/itsual/frontier-atlas">GitHub repository</a></div></footer>
+  <script>
+    let atlas = {};
+    const detail = document.querySelector("#detail");
+    function renderLab(key) {
+      const lab = atlas.labs?.[key];
+      if (!lab) return;
+      detail.innerHTML = `<div class="detail-main"><p class="detail-label">recommended starting point</p><h3>${lab.route}</h3><p>${lab.text}</p><div class="pills" style="margin-top:20px">${lab.pills.map(item => `<span class="pill">${item}</span>`).join("")}</div></div><aside class="detail-side"><h4>Useful for</h4><ul>${lab.uses.map(item => `<li>${item}</li>`).join("")}</ul></aside>`;
+    }
+    document.querySelectorAll(".model-card").forEach(button => button.addEventListener("click", () => {
+      document.querySelectorAll(".model-card").forEach(card => card.setAttribute("aria-pressed", "false"));
+      button.setAttribute("aria-pressed", "true");
+      renderLab(button.dataset.lab);
+    }));
+    document.querySelector("#recommend").addEventListener("click", () => {
+      const task = document.querySelector("#task").value;
+      const priority = document.querySelector("#priority").value;
+      const route = atlas.routes?.[task]?.[priority];
+      if (!route) return;
+      const [title, copy] = route;
+      document.querySelector("#result").innerHTML = `<p class="result-kicker">your recommended starting point</p><h3>${title}</h3><p>${copy}</p>`;
+      document.querySelector("#result").hidden = false;
     });
-    document.querySelector("[data-open]")?.addEventListener("click", (e) => {
-      state.model = e.currentTarget.dataset.open; state.effort = e.currentTarget.dataset.e; state.view = "desk"; render();
-    });
-  }
-  if (state.view === "desk") {
-    $("labs")?.addEventListener("click", (e) => { const b = e.target.closest("[data-lab]"); if (!b) return; state.lab = b.dataset.lab; render(); });
-    $("models")?.addEventListener("click", (e) => { const b = e.target.closest("[data-model]"); if (!b) return; state.model = b.dataset.model; state.effort = model(state.model).def; render(); });
-    $("efforts")?.addEventListener("click", (e) => { const b = e.target.closest("[data-effort]"); if (!b) return; state.effort = b.dataset.effort; render(); });
-  }
-  if (state.view === "playbook") {
-    document.querySelectorAll("[data-act]").forEach((b) => b.onclick = () => {
-      const a = ACTIVITIES[+b.dataset.act]; state.q = a.label; state.rec = { model: model(a.model), effort: a.effort, why: a.label, up: a.up||null };
-      state.model = a.model; state.effort = a.effort; state.view = "advise"; render();
-    });
-  }
-  if (state.view === "compare") {
-    $("left").value = state.left; $("right").value = state.right;
-    $("left").onchange = (e) => { state.left = e.target.value; render(); };
-    $("right").onchange = (e) => { state.right = e.target.value; render(); };
-  }
-}
-
-function render() {
-  nav();
-  const map = { advise, desk, playbook, compare };
-  $("app").innerHTML = map[state.view]();
-  bind();
-}
-render();
-</script>
+    async function loadAtlas() {
+      try {
+        const response = await fetch("data/atlas.json");
+        if (!response.ok) throw new Error("Could not load atlas data");
+        atlas = await response.json();
+        renderLab("openai");
+      } catch (error) {
+        detail.innerHTML = "<p>Atlas data could not load. Refresh the page and try again.</p>";
+      }
+    }
+    loadAtlas();
+  </script>
 </body>
 </html>
+

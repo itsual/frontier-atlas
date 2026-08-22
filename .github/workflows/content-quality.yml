@@ -1,0 +1,36 @@
+name: Check content quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate content rules
+        run: node scripts/check-content.mjs
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress README.md SOURCES.md CONTRIBUTING.md CHANGELOG.md guides docs
+          fail: true
+
+

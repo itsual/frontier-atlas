@@ -1,4 +1,4 @@
-# OpenAI — GPT-5.6 family
+# OpenAI  -  GPT-5.6 family
 
 Current as of 22 August 2026. [Sources](../SOURCES.md).
 
@@ -35,7 +35,7 @@ Sol also exposes `max` and `ultra` reasoning modes in some surfaces. **Ultra** c
 
 | Effort | Use it when | Typical | Do not use it merely because |
 | --- | --- | --- | --- |
-| **Instant / Light–Low** | Simple, low-risk, well-scoped, needs a quick response | Email polish, short summaries, definitions, brainstorming, formatting, routine Q&A | The document is long. Length ≠ difficulty |
+| **Instant / Light - Low** | Simple, low-risk, well-scoped, needs a quick response | Email polish, short summaries, definitions, brainstorming, formatting, routine Q&A | The document is long. Length ≠ difficulty |
 | **Medium** | Normal planning and judgment, clear objective | Business writing, proposals, spreadsheet analysis, decks, standard research, coding | You assume High is always better. Medium is often the balance |
 | **High** | Several steps, sources, constraints, alternatives, dependencies | Market analysis, technical proposals, root-cause, complex coding, strategy, architecture | You want a longer answer. Ask for length separately |
 | **Extra High** | Failure is costly, the problem is ambiguous, assumptions need challenge | Deep research, engineering design, optimisation, security review, due diligence | The prompt is unclear. More reasoning amplifies over-analysis |
@@ -47,25 +47,25 @@ OpenAI’s operational rule: **use the lowest effort that reliably meets the qua
 
 ### GPT-5.6 Sol
 
-| Instant / Light–Low | Medium | High | Extra High | Pro |
+| Instant / Light - Low | Medium | High | Extra High | Pro |
 | --- | --- | --- | --- | --- |
 | Quick but polished professional responses: email rewriting, brief explanations, brainstorming, simple tables, meeting notes, straightforward file questions | **Recommended general default.** Proposals, reports, document analysis, presentations, everyday research, normal coding, business planning | Complex multi-step work with several documents, sources, constraints or trade-offs. Strategy, technical analysis, market research, architecture, difficult coding | Ambiguous or high-impact work needing deeper exploration and cross-checking. Deep research, engineering trade-offs, difficult RCA, final solution design | Highest-value, quality-first work. Board/client submissions, production-critical reviews, difficult optimisation, final legal/financial/technical checks, long-running complex work |
 
 ### GPT-5.6 Terra
 
-| Instant / Light–Low | Medium | High | Extra High | Pro |
+| Instant / Light - Low | Medium | High | Extra High | Pro |
 | --- | --- | --- | --- | --- |
 | Routine professional work at greater efficiency: rewriting, formatting, simple extraction, standard summaries, well-defined transformations | **Best everyday workhorse.** Spreadsheet analysis, tool-enabled workflows, report drafts, coding, structured research, operational execution | Complex but cost- or throughput-sensitive work. Multi-step analysis, document synthesis, agentic workflows, debugging, repeated research | Difficult repeated workflows where Terra has already been tested and meets the bar. Compare against Sol Medium or High before standardising | Not normally shown as “Terra Pro” in ChatGPT. For quality-first work, Sol Pro is the clearer choice |
 
 ### GPT-5.6 Luna
 
-| Instant / Light–Low | Medium | High | Extra High | Pro |
+| Instant / Light - Low | Medium | High | Extra High | Pro |
 | --- | --- | --- | --- | --- |
 | **Best high-volume option.** Classification, tagging, field extraction, cleaning, normalisation, routing, templated replies, short summaries | Repeatable tasks that need limited judgment. Structured summaries, document triage, standard QA, batch transformations | Messier high-volume work: exception handling, multi-field extraction, controlled tool use, limited multi-step decisions | Usually not efficient. If the task needs nuanced judgment, move to Terra or Sol rather than pushing Luna harder | Not normally shown as “Luna Pro”. Usually less sensible than changing model |
 
 ### GPT-5.5
 
-| Instant / Light–Low | Medium | High | Extra High | Pro |
+| Instant / Light - Low | Medium | High | Extra High | Pro |
 | --- | --- | --- | --- | --- |
 | Fast legacy workflows and apps that must preserve 5.5 behaviour | Recommended baseline for existing 5.5 prompts, long-context retrieval, document-heavy work, tool use, established coding | Difficult existing agents, complex debugging, research, 5.5-to-5.6 migration comparisons | Boundary testing, regression evals, hardest unmigrated workflows | Use 5.5 Pro when consistency with previous 5.5 outputs matters. For new quality-first work, choose 5.6 Sol Pro |
 

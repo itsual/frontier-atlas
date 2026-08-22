@@ -1,8 +1,8 @@
-# xAI — Grok 4 family
+# xAI  -  Grok 4 family
 
 Current as of 22 August 2026. [Sources](../SOURCES.md).
 
-Rule of thumb: **start with Grok 4.6**. Only switch when you have a clear reason — context length, cost, or a specialised coding / media surface.
+Rule of thumb: **start with Grok 4.6**. Only switch when you have a clear reason  -  context length, cost, or a specialised coding / media surface.
 
 ## Core text / reasoning models
 
@@ -34,7 +34,7 @@ You mainly meet the latest flagship (**Grok 4.6**) through:
 | --- | --- |
 | **Auto** | Balanced default |
 | **Think / Expert** | Higher reasoning effort |
-| **Heavy** | Multi-agent style — highest quality, slower |
+| **Heavy** | Multi-agent style  -  highest quality, slower |
 
 SuperGrok unlocks higher limits and advanced modes.
 
