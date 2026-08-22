@@ -240,7 +240,7 @@ A sample of the desk. The full list  -  with *move up when* clauses  -  is in th
 
 This repository ships a **static desk** you can open without installing anything:
 
-**[Open the interactive desk](https://itsual.github.io/frontier-atlas/)**  -  choose a task and priority, get a route, and explore each model family.
+**[Open the interactive desk](https://itsual.github.io/frontier-atlas/)**  -  live GitHub Pages site for choosing a task and priority, getting a route, and exploring each model family.
 
 To run it locally:
 
