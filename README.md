@@ -240,7 +240,7 @@ A sample of the desk. The full list  -  with *move up when* clauses  -  is in th
 
 This repository ships a **static desk** you can open without installing anything:
 
-**[docs/index.html](docs/index.html)**  -  select a lab, a model, and an effort; search an activity; compare two models side by side.
+**[Open the interactive desk](https://itsual.github.io/frontier-atlas/)**  -  choose a task and priority, get a route, and explore each model family.
 
 To run it locally:
 
@@ -251,7 +251,7 @@ cd frontier-atlas
 python3 -m http.server 8080 --directory docs
 ```
 
-To publish it from this repo: GitHub Settings → Pages → Deploy from branch → `/docs`.
+The GitHub Pages workflow publishes the site from `docs/`. In GitHub Settings → Pages, select **GitHub Actions** as the source.
 
 ---
 
