@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **Pricing disclaimer:** Pricing, availability, and model behavior can change. For the latest pricing and product details, refer to the official vendor website or documentation before making a decision.
+
 <p align="center">
   <img src="assets/banner.svg" alt="Frontier Atlas  -  Pick the model. Match the effort." width="100%" />
 </p>
