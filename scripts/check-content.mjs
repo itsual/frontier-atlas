@@ -2,7 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, extname } from "node:path";
 
 const roots = ["README.md", "SOURCES.md", "CONTRIBUTING.md", "CHANGELOG.md", "guides", "docs", ".github"];
-const textExtensions = new Set([".md", ".html", ".json", ".svg", ".yml", ".yaml"]);
+const textExtensions = new Set([".md", ".html", ".json", ".svg", ".yml", ".yaml", ".mjs", ".js", ".css", ".txt"]);
 const prohibitedDash = /[\u2013\u2014]/;
 const files = [];
 
@@ -38,5 +38,4 @@ if (failures.length) {
 }
 
 console.log(`Content check passed for ${files.length} files.`);
-
 
