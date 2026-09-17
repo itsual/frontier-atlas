@@ -4,6 +4,7 @@ All notable repository updates are recorded here.
 
 ## 2026-09-17
 
+- Wired the explorer page to `docs/app.js` so each family lists every model as its own clickable card, then opens that model's route, price, uses, and move-up rule.
 - Made every model in a family a clickable card on the interactive desk, instead of one family card with inert pills.
 - Refreshed the closed-frontier desk against vendor docs retrieved 17 September 2026.
 - Added GPT-6 Astra as the OpenAI ceiling model and corrected GPT-5.6 Sol / Terra / Luna API list prices.
