@@ -1,5 +1,5 @@
 {
-  "lastReviewed": "2026-08-22",
+  "lastReviewed": "2026-09-17",
   "pricingNotice": "Pricing, availability, and model behavior change frequently. Confirm current details in official vendor documentation before choosing a model or making a purchase decision.",
   "officialPricing": {
     "OpenAI": "https://platform.openai.com/pricing",
@@ -10,27 +10,27 @@
   "labs": {
     "openai": {
       "route": "Sol Medium",
-      "text": "A strong general starting point for normal professional work. Choose Luna for clean, high volume tasks and move to Sol High when several sources, tradeoffs, or meaningful ambiguity appear.",
-      "pills": ["Sol Medium", "Terra Medium", "Luna Medium"],
-      "uses": ["Writing, planning, reports, and everyday coding", "Clear ways to control reasoning depth", "Quality first delivery with Sol Pro"]
+      "text": "Still the starting point for normal professional work on OpenAI. Choose Luna for clean high-volume tasks, Terra for repeated production work, Sol High when several sources or tradeoffs appear, and GPT-6 Astra only when Sol Extra High or Sol Pro is not enough.",
+      "pills": ["Sol Medium", "Terra Medium", "Luna Medium", "GPT-6 Astra"],
+      "uses": ["Writing, planning, reports, and everyday coding", "Clear ways to control reasoning depth", "Hardest computer-use and quality-first work on Astra"]
     },
     "anthropic": {
       "route": "Sonnet 5 at high",
-      "text": "A practical route for production agents and complex coding. Use Opus 5 at high when quality is the priority, then reserve Fable 5 for the rare cases where Opus falls short.",
-      "pills": ["Sonnet 5", "Opus 5", "Fable 5"],
+      "text": "A practical route for production agents and complex coding. Use Opus 5 at high when quality is the priority, then reserve Fable 5.1 for the rare cases where Opus falls short.",
+      "pills": ["Sonnet 5", "Opus 5", "Fable 5.1"],
       "uses": ["Production agents at volume", "Long coding runs and tool workflows", "High quality analysis and synthesis"]
     },
     "xai": {
       "route": "Grok 4.6",
-      "text": "Start with the flagship for general work. Select 4.3 when your context needs exceed the standard window or when a lower price is useful for a large input.",
+      "text": "Start with the flagship for general work. Select 4.3 when your context needs exceed the standard window or when a lower price is useful for a large input. Grok 4.7 is not generally available.",
       "pills": ["Grok 4.6", "Grok 4.3", "Grok Build 0.1"],
       "uses": ["General work, research, and code", "Large document and codebase context", "Specialized coding workflows"]
     },
     "google": {
-      "route": "Gemini 3.7 Flash",
-      "text": "A capable workhorse for everyday coding, agents, and multimodal tasks. Upgrade to Pro only when Flash has trouble with the actual logic or synthesis required.",
-      "pills": ["3.7 Flash", "3.1 Pro", "Nano"],
-      "uses": ["Fast multimodal workflows", "Google Cloud agent systems", "Offline or on device tasks"]
+      "route": "Gemini 3.8 Flash",
+      "text": "The current Flash workhorse for everyday coding, agents, and multimodal tasks. Keep 3.7 Flash if a workflow is pinned. Upgrade to Pro only when Flash has trouble with the actual logic or synthesis required. Use 3.8 Live for low-latency voice agents.",
+      "pills": ["3.8 Flash", "3.7 Flash", "3.1 Pro", "3.8 Live"],
+      "uses": ["Fast multimodal workflows", "Google Cloud agent systems", "Voice agents and on-device tasks"]
     }
   },
   "routes": {
@@ -46,24 +46,23 @@
     },
     "research": {
       "balanced": ["GPT-5.6 Sol High", "Use this for several sources, constraints, calculations, or tradeoffs."],
-      "speed": ["Gemini 3.7 Flash", "A fast route for broad research and source gathering before deeper analysis."],
-      "quality": ["GPT-5.6 Sol Extra High", "Use this for nuanced, ambiguous, or high impact research where checking work is valuable."]
+      "speed": ["Gemini 3.8 Flash", "A fast route for broad research and source gathering before deeper analysis."],
+      "quality": ["GPT-5.6 Sol Extra High", "Use this for nuanced, ambiguous, or high impact research where checking work is valuable. Move to GPT-6 Astra when computer use or end-to-end professional work is the bottleneck."]
     },
     "code": {
       "balanced": ["GPT-5.6 Terra Medium", "A solid starting point for routine coding, debugging, and practical implementation."],
-      "speed": ["Grok Build 0.1", "A focused option for interactive coding when efficiency is the primary goal."],
-      "quality": ["Claude Opus 5 at high", "A strong route for architecture, large refactors, and demanding tool based coding work."]
+      "speed": ["Grok Build 0.1", "A focused option for interactive coding when efficiency is the primary goal. Gemini 3.8 Flash is the Google equivalent."],
+      "quality": ["Claude Opus 5 at high", "A strong route for architecture, large refactors, and demanding tool based coding work. Fable 5.1 or GPT-6 Astra if Opus is visibly falling short."]
     },
     "bulk": {
-      "balanced": ["GPT-5.6 Luna Medium", "Use this for clean extraction, classification, routing, and batch transformations."],
+      "balanced": ["GPT-5.6 Luna Medium", "Use this for clean extraction, classification, routing, and batch transformations. Luna list pricing is now in the cheap high-volume band."],
       "speed": ["Claude Haiku 4.5", "A fast option for well defined high volume classification and extraction."],
       "quality": ["GPT-5.6 Terra Medium", "Use this when exceptions, business rules, and richer validation enter the workflow."]
     },
     "critical": {
       "balanced": ["GPT-5.6 Sol Extra High", "A careful starting point for expensive mistakes, difficult ambiguity, and serious technical review."],
       "speed": ["GPT-5.6 Sol High", "Maintain a strong reasoning baseline when time is limited, then add targeted review where risk is greatest."],
-      "quality": ["GPT-5.6 Sol Pro", "Reserve this for final production reviews and high value deliverables where a modest quality gain matters."]
+      "quality": ["GPT-6 Astra", "Reserve this for final production reviews, computer-use work, and high value deliverables where Sol Pro is no longer the ceiling."]
     }
   }
 }
-
