@@ -10,7 +10,7 @@ function render() {
  const matches=selectModels(data,request);
  results.replaceChildren();
  status.textContent=matches.length+" compatible candidates. Ordered by editorial fit, not benchmark rank.";
- if(!matches.length) { results.append(node("p","No verified match for these constraints. Change your provider or input, or preprocess the input into text. Unknown context limits are excluded for large inputs.")); return; }
+ if(!matches.length) { document.querySelector("#notes").replaceChildren(); results.append(node("p","No verified match for these constraints. Change your provider or input, or preprocess the input into text. Unknown context limits are excluded for large inputs.")); return; }
  matches.slice(0,4).forEach((m,i)=>{
  const card=node("article",""); card.className="candidate";
  card.append(node("p",m.provider.toUpperCase()+" / "+m.tier,"eyebrow"),node("h3",m.name),node("code",m.id),node("p",m.description),node("h4","Why it fits"),node("p",m.reason),node("h4","Reasoning starting point"),node("p",m.effort));
