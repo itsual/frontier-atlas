@@ -1,115 +1,33 @@
-let atlas = {};
-let activeFamily = "openai";
-let activeModel = "sol";
-const familyOrder = ["openai", "anthropic", "xai", "google"];
-
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  }[char]));
-}
-
-function modelsFor(family) {
-  return Object.entries(atlas.models || {})
-    .filter(([, model]) => model.family === family)
-    .map(([id, model]) => ({ id, ...model }));
-}
-
-function selectFamily(key) {
-  if (!atlas.families?.[key]) return;
-  activeFamily = key;
-  const models = modelsFor(key);
-  const preferred = atlas.families[key].defaultModel;
-  activeModel = models.some(model => model.id === preferred)
-    ? preferred
-    : (models[0]?.id || activeModel);
-  render();
-}
-
-function selectModel(id) {
-  const model = atlas.models?.[id];
-  if (!model) return;
-  activeModel = id;
-  activeFamily = model.family;
-  render();
-}
-
-function renderFamilies() {
-  const familyGrid = document.querySelector("#family-grid");
-  if (!familyGrid) return;
-  familyGrid.innerHTML = familyOrder.map(key => {
-    const family = atlas.families?.[key];
-    if (!family) return "";
-    const count = modelsFor(key).length;
-    const pressed = key === activeFamily ? "true" : "false";
-    return `<button class="family-chip ${key}" type="button" data-family="${key}" aria-pressed="${pressed}"><small>${escapeHtml(family.name)}</small><strong>${escapeHtml(family.short)}</strong><span>${count} models</span></button>`;
-  }).join("");
-  familyGrid.querySelectorAll("[data-family]").forEach(button => {
-    button.addEventListener("click", () => selectFamily(button.dataset.family));
-  });
-}
-
-function renderModels() {
-  const modelGrid = document.querySelector("#model-grid");
-  const modelLabel = document.querySelector("#model-grid-label");
-  if (!modelGrid) return;
-  const family = atlas.families?.[activeFamily];
-  const models = modelsFor(activeFamily);
-  if (modelLabel && family) {
-    modelLabel.textContent = `${family.name} models  -  click any card`;
-  }
-  modelGrid.innerHTML = models.map(model => {
-    const pressed = model.id === activeModel ? "true" : "false";
-    return `<button class="model-card ${model.family}" type="button" data-model="${model.id}" aria-pressed="${pressed}"><small>${escapeHtml(model.role)}</small><span class="arrow">\u2197</span><h3>${escapeHtml(model.name)}</h3><p>${escapeHtml(model.route)}</p><div class="model-meta">${escapeHtml(model.price)}</div></button>`;
-  }).join("");
-  modelGrid.querySelectorAll("[data-model]").forEach(button => {
-    button.addEventListener("click", () => selectModel(button.dataset.model));
-  });
-}
-
-function renderDetail() {
-  const detail = document.querySelector("#detail");
-  if (!detail) return;
-  const model = atlas.models?.[activeModel];
-  const family = atlas.families?.[model?.family || activeFamily];
-  if (!model || !family) return;
-  const pills = (model.pills || []).map(item => `<span class="pill">${escapeHtml(item)}</span>`).join("");
-  detail.innerHTML = `<div class="detail-main"><p class="detail-label">${escapeHtml(family.name)} \u00b7 ${escapeHtml(model.role)} \u00b7 ${escapeHtml(model.price)}</p><h3>${escapeHtml(model.name)}</h3><p class="detail-route">${escapeHtml(model.route)}</p><p>${escapeHtml(model.text)}</p><div class="pills" style="margin-top:20px">${pills}</div></div><aside class="detail-side"><h4>Useful for</h4><ul>${model.uses.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul><h4 style="margin-top:22px">Move up when</h4><p>${escapeHtml(model.moveUp)}</p></aside>`;
-}
-
+import {selectModels} from "./router.mjs";
+const form = document.querySelector("form");
+const results = document.querySelector("#results");
+const status = document.querySelector("#status");
+let data;
+function node(tag, text, className) { const el=document.createElement(tag); el.textContent=text; if(className)el.className=className; return el; }
 function render() {
-  renderFamilies();
-  renderModels();
-  renderDetail();
+ if(!data)return;
+ const request=Object.fromEntries(new FormData(form));
+ const matches=selectModels(data,request);
+ results.replaceChildren();
+ status.textContent=matches.length+" compatible candidates. Ordered by editorial fit, not benchmark rank.";
+ if(!matches.length) { results.append(node("p","No verified match for these constraints. Change your provider or input, or preprocess the input into text. Unknown context limits are excluded for large inputs.")); return; }
+ matches.slice(0,4).forEach((m,i)=>{
+ const card=node("article",""); card.className="candidate";
+ card.append(node("p",m.provider.toUpperCase()+" / "+m.tier,"eyebrow"),node("h3",m.name),node("code",m.id),node("p",m.description),node("h4","Why it fits"),node("p",m.reason),node("h4","Reasoning starting point"),node("p",m.effort));
+ const link=node("a","Verify model and pricing");link.href=m.source;card.append(link);results.append(card);
+ });
+ const notes=document.querySelector("#notes");notes.replaceChildren();
+ const advice=[request.task==="research"?"Enable web search or supply current sources. A model name alone does not provide current information.":request.task==="analysis"?"Use calculation tools, reconcile units, and validate results against source data.":request.task==="code"?"Supply repository context and tests. Validate the patch with your build and regression suite.":request.task==="extract"?"Define a schema, validate fields, and send ambiguous records to an exception queue.":request.task==="agent"?"Provide tools, stopping rules, and a recoverable execution environment.":"Provide audience, purpose, tone, and examples of the desired output.",
+ request.complexity==="hard"?"For consequential decisions, add independent review and checks. More reasoning does not guarantee correctness.":"Escalate only after inspecting a repeatable failure on representative examples.",
+ "Provider and modality are eligibility rules. Tier and task fit order candidates. Ties are alphabetical; no cross-provider winner is claimed."];
+ advice.forEach(t=>notes.append(node("li",t)));
 }
-
-function wireRecommend() {
-  const button = document.querySelector("#recommend");
-  if (!button) return;
-  button.addEventListener("click", () => {
-    const task = document.querySelector("#task").value;
-    const priority = document.querySelector("#priority").value;
-    const route = atlas.routes?.[task]?.[priority];
-    if (!route) return;
-    const [title, copy] = route;
-    document.querySelector("#result").innerHTML = `<p class="result-kicker">your recommended starting point</p><h3>${escapeHtml(title)}</h3><p>${escapeHtml(copy)}</p>`;
-    document.querySelector("#result").hidden = false;
-  });
+form.addEventListener("change",render);
+form.addEventListener("submit",e=>{e.preventDefault();render();});
+async function init(){
+ try {const response=await fetch("data/atlas.json");if(!response.ok)throw new Error("Catalog unavailable"); data=await response.json();document.querySelector("#reviewed").textContent=data.reviewed;
+ const catalog=document.querySelector("#catalog");
+ data.models.forEach(m=>{const row=node("tr","");[m.name,m.provider,m.tier,m.context?m.context.toLocaleString():"Not verified here"].forEach(t=>row.append(node("td",t)));catalog.append(row);});
+ render();}catch(e){status.textContent="The catalog could not load. Refresh or visit the repository guides.";document.querySelector("button").disabled=true;}
 }
-
-async function loadAtlas() {
-  const detail = document.querySelector("#detail");
-  try {
-    const response = await fetch("data/atlas.json");
-    if (!response.ok) throw new Error("Could not load atlas data");
-    atlas = await response.json();
-    activeFamily = "openai";
-    activeModel = atlas.families.openai.defaultModel;
-    render();
-    wireRecommend();
-  } catch (error) {
-    if (detail) detail.innerHTML = "<p>Atlas data could not load. Refresh the page and try again.</p>";
-  }
-}
-
-loadAtlas();
+init();
