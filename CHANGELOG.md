@@ -2,6 +2,14 @@
 
 All notable repository updates are recorded here.
 
+## 2026-10-19
+
+- Refreshed current model identities against all four official catalogs.
+- Replaced fixed task lookups with capability filters and explained editorial shortlists.
+- Added native modality, provider access, complexity, and context requirements.
+- Replaced older provider guides and removed obsolete default and pricing claims.
+- Redesigned the page around task requirements, evidence, and validation advice.
+
 ## 2026-09-17
 
 - Wired the explorer page to `docs/app.js` so each family lists every model as its own clickable card, then opens that model's route, price, uses, and move-up rule.
